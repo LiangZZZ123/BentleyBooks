@@ -2,7 +2,6 @@ package com.example.chaochin.bentleybooks;
 
 import android.app.Application;
 
-
 public class UserData extends Application{
     private String password;
     private String email;
