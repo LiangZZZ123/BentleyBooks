@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainTableLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="*">
+
+    <TableRow
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_gravity="center"
+            android:text="Bentley email"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dip"
+            android:textSize="20sp"
+             />
+
+        <EditText
+            android:id="@+id/e_email"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1" >
+        </EditText>
+    </TableRow>
+
+    <TableRow
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/password"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dip"
+            android:text="Password"
+            android:layout_gravity="center"
+            android:textSize="20sp">
+        </TextView>
+
+        <EditText
+            android:id="@+id/e_password"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1" >
+        </EditText>
+    </TableRow>
+
+    <TableRow
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/confirmpassword"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dip"
+            android:text="Confirm Password"
+            android:layout_gravity="center"
+            android:textSize="20sp">
+        </TextView>
+
+        <EditText
+            android:id="@+id/e_confirmpassword"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1" >
+        </EditText>
+    </TableRow>
+
+    <TableRow
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dip"
+            android:text="User Name"
+            android:layout_gravity="center"
+            android:textSize="20sp">
+        </TextView>
+
+        <EditText
+            android:id="@+id/e_username"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1" >
+        </EditText>
+    </TableRow>
+
+    <TableRow
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/phonenumber"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dip"
+            android:text="Phone Number"
+            android:layout_gravity="center"
+            android:textSize="20sp">
+        </TextView>
+
+        <EditText
+            android:id="@+id/e_phonenumber"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1" >
+        </EditText>
+    </TableRow>
+
+    <TableRow
+        android:gravity="center">
+        <Button
+            android:id="@+id/confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="Confirm"
+            android:layout_marginRight="4dp">
+        </Button>
+
+    </TableRow>
+</TableLayout>
