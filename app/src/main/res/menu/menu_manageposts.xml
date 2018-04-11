@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--search keyword "Changing the menu when it opens android"  -->
+
+<!--search keyword "Changing the menu when it opens android"  -->
 
     <item android:id="@+id/add"
         android:title="Add"
@@ -12,8 +13,8 @@
         app:showAsAction="always" />
 
     <item android:id="@+id/returnPage"
-        android:title="Return"
-        app:showAsAction="always" />
+        android:title="Return to main page"
+        app:showAsAction="ifRoom" />
 
 
 </menu>
