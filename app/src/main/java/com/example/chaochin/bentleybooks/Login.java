@@ -65,7 +65,6 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    public static final int requestCode_235 = 235;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,46 +94,21 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                 attemptLogin();
             }
         });
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        signUpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent signUp = new Intent(view.getContext(), SignUp.class);
-                startActivityForResult(signUp, requestCode_235);
+                signUpActivity(view);
             }
         });
-
-
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
-    @Override
-    protected void onActivityResult(int requestCode,
-                                    int resultCode,  Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode){
-            case (requestCode_235): {
-
-                if (resultCode == Activity.RESULT_OK) {
-                    Toast ToastMessage = Toast.makeText(this, "Second Activity is down", Toast.LENGTH_LONG);
-                    View toastView = ToastMessage.getView();
-                    toastView.setBackgroundColor(Color.TRANSPARENT);
-                    TextView text = (TextView) toastView.findViewById(android.R.id.message);
-                    text.setTextColor(Color.BLACK);
-                    ToastMessage.show();
-                }
-                else
-                    Toast.makeText(this, "Result NOT OK", Toast.LENGTH_LONG).show();
-
-                break;
-            }
-
-            default : Toast.makeText(this, "Not my problem", Toast.LENGTH_LONG).show();
-        }//switch
-
-    }// onActivityResult
-
+    public void signUpActivity(View view) {
+        Intent Intent = new Intent(this, SignUp.class);
+        startActivity(Intent);
+    }
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
