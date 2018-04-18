@@ -8,7 +8,15 @@ public class Book extends UserData{
     private String ISBN;
     private String condition;
     private String email = this.getEmail();
+    private int price;
 
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
 
     public String getISBN() {
         return ISBN;
