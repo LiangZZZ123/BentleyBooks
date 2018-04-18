@@ -35,6 +35,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
     private String[] conditions = {"Select book condition:", "Excellent", "Good", "Bad", "Broken"};
     private ArrayList<ArrayList<String>> books  = new ArrayList<>();    //store list of (ArrayList)book
     public static final int requestCode_1 = 100;
+    public String url;
 
 
 
@@ -99,8 +100,10 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
             case R.id.add:
                 if (numberISBN.length() == 13 && !price.equals("") && !condition.equals("Select book condition:")){
                     ArrayList book  = new ArrayList<>(); //store ISBN and BookCondition and Price for one book
+                    url = "https://tw.yahoo.com/";
 
                     Intent intent1 = new Intent(this, BookInformation.class);
+                    intent1.putExtra("webView", url);
                     startActivityForResult(intent1, requestCode_1);
 
                     //Liang: 下面add的code應該要放在onActivityResult的方法下，我把方法加在下面了

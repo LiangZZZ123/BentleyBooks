@@ -24,6 +24,9 @@ public class BookInformation extends AppCompatActivity  {
         confirmPost = (Button)findViewById(R.id.confirmPost);
         cancel = (Button)findViewById(R.id.cancel);
 
+        Url = getIntent().getStringExtra("webView");
+        webView.loadUrl(Url);
+
 
         confirmPost.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
