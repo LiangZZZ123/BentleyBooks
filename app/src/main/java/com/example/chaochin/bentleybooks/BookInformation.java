@@ -28,12 +28,18 @@ public class BookInformation extends AppCompatActivity  {
         confirmPost.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 setResult(Activity.RESULT_OK);
+                Intent i1 = new Intent();
+                i1.setClass(BookInformation.this, ManagePost.class);
+                startActivity(i1);
             }
         });
 
         cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 setResult(Activity.RESULT_CANCELED);
+                Intent i1 = new Intent();
+                i1.setClass(BookInformation.this, ManagePost.class);
+                startActivity(i1);
             }
         });
 
