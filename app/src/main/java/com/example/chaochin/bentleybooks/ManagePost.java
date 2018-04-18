@@ -33,7 +33,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
     private ArrayAdapter aaSpin;
     private ArrayAdapter aaList;
     private String[] conditions = {"Select book condition:", "Excellent", "Good", "Bad", "Broken"};
-    private ArrayList<ArrayList<String>> books  = new ArrayList<>();    //store list of (ArrayList)book
+    private ArrayList<Book> books  = new ArrayList<>();    //store list of (ArrayList)book
     public static final int requestCode_1 = 100;
     public String url;
 
@@ -99,19 +99,19 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         switch (item.getItemId()) {
             case R.id.add:
                 if (numberISBN.length() == 13 && !price.equals("") && !condition.equals("Select book condition:")){
-                    ArrayList book  = new ArrayList<>(); //store ISBN and BookCondition and Price for one book
-                    url = "https://tw.yahoo.com/";
+                    //ArrayList book  = new ArrayList<>(); //store ISBN and BookCondition and Price for one book
+                    url = "https://www.biblio.com/" + numberISBN;
 
                     Intent intent1 = new Intent(this, BookInformation.class);
                     intent1.putExtra("webView", url);
                     startActivityForResult(intent1, requestCode_1);
 
                     //Liang: 下面add的code應該要放在onActivityResult的方法下，我把方法加在下面了
-                    book.add(numberISBN);
-                    book.add(condition);
-                    book.add(price);
-                    books.add(book);
-                    aaList.notifyDataSetChanged();;
+                    //book.add(numberISBN);
+                    //book.add(condition);
+                    //book.add(price);
+                    //books.add(book);
+                    //aaList.notifyDataSetChanged();;
 
                     edit1.setText("");
                     spin1.setSelection(0);
@@ -144,6 +144,9 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == requestCode_1) {
             if (resultCode == Activity.RESULT_OK) {
+                Book a = new Book(numberISBN, condition, price);
+                books.add(a);
+                aaList.notifyDataSetChanged();
                 //BookInformation 回傳confirmPost後的code
             }
             if(resultCode == Activity.RESULT_CANCELED) {
