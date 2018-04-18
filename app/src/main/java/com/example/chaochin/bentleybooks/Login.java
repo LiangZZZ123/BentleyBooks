@@ -106,7 +106,7 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
     }
 
     public void signUpActivity(View view) {
-      //  Intent Intent = new Intent(this, SignUp.class);
+      
         startActivity(new Intent(Login.this, SignUp.class));
     }
 //    private void populateAutoComplete() {
