@@ -10,6 +10,12 @@ public class Book extends UserData{
     private String email = this.getEmail();
     private int price;
 
+    public Book (String ISBN, String condition, int price){
+        this.ISBN = ISBN;
+        this.price = price;
+        this.condition = condition;
+    }
+
     public int getPrice() {
         return price;
     }
