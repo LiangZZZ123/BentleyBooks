@@ -1,5 +1,6 @@
 package com.example.chaochin.bentleybooks;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -8,7 +9,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.content.Intent;
 
-public class BookInformation extends AppCompatActivity implements View.OnClickListener {
+public class BookInformation extends AppCompatActivity  {
 
     WebView webView;
     String Url;
@@ -26,7 +27,13 @@ public class BookInformation extends AppCompatActivity implements View.OnClickLi
 
         confirmPost.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                webView.loadUrl(Url);
+                setResult(Activity.RESULT_OK);
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                setResult(Activity.RESULT_CANCELED);
             }
         });
 
@@ -38,8 +45,4 @@ public class BookInformation extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
 }

@@ -3,6 +3,7 @@ package com.example.chaochin.bentleybooks;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -33,6 +34,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
     private ArrayAdapter aaList;
     private String[] conditions = {"Select book condition:", "Excellent", "Good", "Bad", "Broken"};
     private ArrayList<ArrayList<String>> books  = new ArrayList<>();    //store list of (ArrayList)book
+    public static final int requestCode_1 = 100;
 
 
 
@@ -40,7 +42,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.manageposts);
 
-        edit1 = findViewById(R.id.editISBN);
+        edit1 = (EditText)findViewById(R.id.editISBN);
         edit2 = findViewById(R.id.editPrice);
 
 
@@ -97,6 +99,11 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
             case R.id.add:
                 if (numberISBN.length() == 13 && !price.equals("") && !condition.equals("Select book condition:")){
                     ArrayList book  = new ArrayList<>(); //store ISBN and BookCondition and Price for one book
+
+                    Intent intent1 = new Intent(this, BookInformation.class);
+                    startActivityForResult(intent1, requestCode_1);
+
+                    //Liang: 下面add的code應該要放在onActivityResult的方法下，我把方法加在下面了
                     book.add(numberISBN);
                     book.add(condition);
                     book.add(price);
@@ -129,7 +136,20 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
 
     }
 
-    //write "delete" with context menu and AlertDialog
+    @Override
+    protected void onActivityResult(int requestCode,int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == requestCode_1) {
+            if (resultCode == Activity.RESULT_OK) {
+                //BookInformation 回傳confirmPost後的code
+            }
+            if(resultCode == Activity.RESULT_CANCELED) {
+                //BookInformation 回傳cancel後的code
+            }
+        }
+    }
+
+            //write "delete" with context menu and AlertDialog
 //    this.getListView().setLongClickable(true);
 // this.getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 //        public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
