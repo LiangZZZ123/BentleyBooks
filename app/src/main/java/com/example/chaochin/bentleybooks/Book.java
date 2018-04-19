@@ -16,6 +16,9 @@ public class Book extends UserData{
         this.price = price;
 
     }
+    public String toString (){
+        return "ISBN: " + this.ISBN + ",  " + this.condition + ",   $" + this.price;
+    }
 
     public String getPrice() {
         return price;
