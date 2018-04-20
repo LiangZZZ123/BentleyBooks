@@ -64,36 +64,11 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
 
     }
 
-    //Spinner manipulation
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        switch (conditions[i]) {
-            case "Excellent":
-                condition = "Excellent condition";
-                break;
-            case "Good":
-                condition = "Good condition";
-                break;
-            case "Bad":
-                condition = "Bad condition";
-                break;
-            case "Broken":
-                condition = "Broken condition";
-                break;
-        }
-    }
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
-
-
     //create option menu and link it to menu(menu_manageposts) created in xml
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_manageposts, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
     //respond to item selected in option menu
     public boolean onOptionsItemSelected(MenuItem item) {
         numberISBN = String.valueOf(edit1.getText().toString());
@@ -114,6 +89,8 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
                 return true;
 
             case R.id.returnPage:
+                Intent intentMainPage = new Intent(this, Search_ISBN.class);
+                startActivity(intentMainPage);
                 return true;
 
             default:
@@ -122,6 +99,27 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
     }
 
 
+
+    //Spinner manipulation
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        switch (conditions[i]) {
+            case "Excellent":
+                condition = "Excellent condition";
+                break;
+            case "Good":
+                condition = "Good condition";
+                break;
+            case "Bad":
+                condition = "Bad condition";
+                break;
+            case "Broken":
+                condition = "Broken condition";
+                break;
+        }
+    }
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) { }
 
 
     //listener method for listview

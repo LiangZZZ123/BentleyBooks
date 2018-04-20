@@ -13,20 +13,21 @@
         />
 
     <EditText
+        android:id="@+id/search_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/search_edit"
         android:hint="Search ISBN Number Here"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/search_button"
         android:layout_toStartOf="@+id/search_button"
-        android:layout_marginTop="40dip" />
+        android:layout_marginTop="40dip"
+        android:inputType="number"/>
 
     <Button
+        android:id="@+id/search_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Go"
-        android:id="@+id/search_button"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@id/search_edit"/>
