@@ -93,8 +93,9 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
 
             try {
                 // execute SQL commands to create table, insert data, select contents
-                String query = "insert into BOOK2(isbn,bookcondition, price)"
+                String query = "insert into book (isbn,bookcondition, price)"
                         + "values(?, ?, ?)";
+
                PreparedStatement p = con.prepareStatement(query);
                p.setString(1, a.getISBN());
                 p.setString(2, a.getCondition());
@@ -183,10 +184,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
 
     //listener method for listview
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-    }
-
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) { }
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
         AlertDialog.Builder alert = new AlertDialog.Builder(
