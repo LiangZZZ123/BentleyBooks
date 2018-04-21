@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+import java.sql.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -38,6 +39,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
     private String condition;
     private EditText edit2; //for Price input
     private String price;
+    private Thread t = null;
 
     private Thread t = null;
 
@@ -48,6 +50,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
     private ArrayList<Book> books  = new ArrayList<>();    //store list of (ArrayList)book
     public static final int requestCode_1 = 100;
     public String url;
+    public Book a;
 
 
 
@@ -75,6 +78,61 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         aaList = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, books);
         listview1.setAdapter(aaList);
     }
+    private Runnable background = new Runnable() {
+        public void run(){
+            String URL = "jdbc:mysql://frodo.bentley.edu:3306/bentleybooks";
+            String username = "CS280";
+            String password = "CS280";
+
+            try { //load driver into VM memory
+                Class.forName("com.mysql.jdbc.Driver");
+            } catch (ClassNotFoundException e) {
+                Log.e("JDBC", "Did not load driver");
+
+            }
+
+            Statement stmt = null;
+            Connection con=null;
+            try { //create connection and statement objects
+                con = DriverManager.getConnection (
+                        URL,
+                        username,
+                        password);
+            } catch (SQLException e) {
+                Log.e("JDBC", "problem connecting");
+            }
+
+            try {
+                // execute SQL commands to create table, insert data, select contents
+                String query = "insert into BOOK2(isbn,bookcondition, price)"
+                        + "values(?, ?, ?)";
+               PreparedStatement p = con.prepareStatement(query);
+               p.setString(1, a.getISBN());
+                p.setString(2, a.getCondition());
+                p.setString(3, a.getPrice());
+                p.execute();
+
+                //clean up
+                t = null;
+
+
+            } catch (SQLException e) {
+                Log.e("JDBC","problems with SQL sent to "+URL+
+                        ": "+e.getMessage());
+            }
+
+            finally {
+                try { //close may throw checked exception
+                    if (con != null)
+                        con.close();
+                } catch(SQLException e) {
+                    Log.e("JDBC", "close connection failed");
+                }
+            };
+
+        }
+    };
+
 
     Runnable background = new Runnable() {
         public void run() {
@@ -214,8 +272,11 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         if (requestCode == requestCode_1) {
             if (resultCode == Activity.RESULT_OK) {
                 //BookInformation 回傳confirmPost後的code
-                Book a = new Book(numberISBN, condition, price);
+                a = new Book(numberISBN, condition, price);
                 books.add(a);
+                t = new Thread(background);
+                t.start();
+
                 aaList.notifyDataSetChanged();
             }
             if(resultCode == Activity.RESULT_CANCELED) {
