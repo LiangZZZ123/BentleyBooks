@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +18,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +38,8 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
     private String condition;
     private EditText edit2; //for Price input
     private String price;
+
+    private Thread t = null;
 
     private ListView listview1;
     private ArrayAdapter aaSpin;
@@ -48,6 +58,9 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         edit1 = (EditText)findViewById(R.id.editISBN);
         edit2 = findViewById(R.id.editPrice);
 
+        t = new Thread(background);
+        t.start();
+
 
         //set for spinner
         spin1 = (Spinner) findViewById(R.id.spinCondition);
@@ -61,10 +74,44 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         listview1.setOnItemLongClickListener(this);
         aaList = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, books);
         listview1.setAdapter(aaList);
-
     }
 
-    //create option menu and link it to menu(menu_manageposts) created in xml
+    Runnable background = new Runnable() {
+        public void run() {
+            String URL = "jdbc:mysql://frodo.bentley.edu:3306/world";
+            String username = "Android";
+            String password = "android";
+
+            try { //load driver into VM memory
+                Class.forName("com.mysql.jdbc.Driver");
+            } catch (ClassNotFoundException e) {
+                Log.e("JDBC", "Did not load driver");
+            }
+
+            Statement stmt = null;
+            Connection con = null;
+            try { //create connection to database
+                con = DriverManager.getConnection(
+                        URL,
+                        username,
+                        password);
+                stmt = con.createStatement();
+
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                try { //close may throw checked exception
+                    if (con != null)
+                        con.close();
+                } catch (SQLException e) {
+                    Log.e("JDBC", "close connection failed");
+                }
+            }
+        }
+    };
+
+                //create option menu and link it to menu(menu_manageposts) created in xml
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_manageposts, menu);
         return super.onCreateOptionsMenu(menu);
