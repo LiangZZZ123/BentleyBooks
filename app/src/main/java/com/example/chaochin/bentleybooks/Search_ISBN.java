@@ -20,10 +20,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by ls on 4/11/2018.
- */
-
 public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener {
     private EditText editisbn;
     private String isbn;
@@ -39,7 +35,7 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
     Book book2 = new Book("222", "bad", "12");
     Book book3 = new Book("333", "terrible", "13");
     Book book4 = new Book("111", "excellent", "11");
-    private Book[] booksOnline = {book1, book2, book3, book4};
+    public Book[] booksOnline = {book1, book2, book3, book4};
 
 
     @Override
@@ -94,11 +90,9 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         aaList.notifyDataSetChanged();
     }
 
+    //listener method for listview
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-    }
-
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) { }
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
         AlertDialog.Builder alert = new AlertDialog.Builder(
@@ -133,6 +127,7 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         return true;
     }
 
+    //method to search book based on ISBN
     public void selectISBN(String isbn) {
         booksShow.clear();
 //        isbn = editisbn.getText().toString();

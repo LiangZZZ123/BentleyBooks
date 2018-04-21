@@ -101,16 +101,16 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
             } catch (SQLException e) {
                 Log.e("JDBC", "problem connecting");
             }
-            //PreparedStatement ps = conn.prepareStatement("INSERT INTO users (name, mail) VALUES(?, ?);");
+
             try {
                 // execute SQL commands to create table, insert data, select contents
-Log.e("connect", a.getCondition());
-                PreparedStatement p = con.prepareStatement("INSERT INTO BOOK2 (isbn, bookcondtion, price) VALUES(?, ?, ?);");
-                Log.e("connect", "problem2");
+                String query = "insert into book (isbn,bookcondition, price)"
+                        + "values(?, ?, ?)";
+
+               PreparedStatement p = con.prepareStatement(query);
                p.setString(1, a.getISBN());
                 p.setString(2, a.getCondition());
                 p.setString(3, a.getPrice());
-                Log.e("connect", "problem3");
                 p.execute();
 
                 //clean up
@@ -233,10 +233,7 @@ Log.e("connect", a.getCondition());
 
     //listener method for listview
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-    }
-
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) { }
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
         AlertDialog.Builder alert = new AlertDialog.Builder(
@@ -274,7 +271,6 @@ Log.e("connect", a.getCondition());
             if (resultCode == Activity.RESULT_OK) {
                 //BookInformation 回傳confirmPost後的code
                 a = new Book(numberISBN, condition, price);
-                Log.e("varible",numberISBN);
                 books.add(a);
                 t = new Thread(background);
                 t.start();
@@ -289,4 +285,9 @@ Log.e("connect", a.getCondition());
         spin1.setSelection(0);
         edit2.setText("");
     }
+
+
 }
+
+
+
