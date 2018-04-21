@@ -101,15 +101,16 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
             } catch (SQLException e) {
                 Log.e("JDBC", "problem connecting");
             }
-
+            //PreparedStatement ps = conn.prepareStatement("INSERT INTO users (name, mail) VALUES(?, ?);");
             try {
                 // execute SQL commands to create table, insert data, select contents
-                String query = "insert into BOOK2(isbn,bookcondition, price)"
-                        + "values(?, ?, ?)";
-               PreparedStatement p = con.prepareStatement(query);
+Log.e("connect", a.getCondition());
+                PreparedStatement p = con.prepareStatement("INSERT INTO BOOK2 (isbn, bookcondtion, price) VALUES(?, ?, ?);");
+                Log.e("connect", "problem2");
                p.setString(1, a.getISBN());
                 p.setString(2, a.getCondition());
                 p.setString(3, a.getPrice());
+                Log.e("connect", "problem3");
                 p.execute();
 
                 //clean up
@@ -273,6 +274,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
             if (resultCode == Activity.RESULT_OK) {
                 //BookInformation 回傳confirmPost後的code
                 a = new Book(numberISBN, condition, price);
+                Log.e("varible",numberISBN);
                 books.add(a);
                 t = new Thread(background);
                 t.start();
@@ -287,9 +289,4 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         spin1.setSelection(0);
         edit2.setText("");
     }
-
-
 }
-
-
-
