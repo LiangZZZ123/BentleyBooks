@@ -78,9 +78,9 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
 
     Runnable background = new Runnable() {
         public void run() {
-            String URL = "jdbc:mysql://frodo.bentley.edu:3306/world";
-            String username = "Android";
-            String password = "android";
+            String URL = "jdbc:mysql://frodo.bentley.edu:3306/bentleybooks";
+            String username = "CS280";
+            String password = "CS280";
 
             try { //load driver into VM memory
                 Class.forName("com.mysql.jdbc.Driver");
@@ -97,6 +97,9 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
                         password);
                 stmt = con.createStatement();
 
+                ResultSet result = stmt.executeQuery(
+                        //SQL command here
+                        "");
 
             } catch (SQLException e) {
                 e.printStackTrace();
