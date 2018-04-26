@@ -28,6 +28,7 @@ public class Login extends AppCompatActivity  {
     public String email;
     private String password;
     private boolean loginInfo = false;
+    public char a;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
