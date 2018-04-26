@@ -20,7 +20,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import java.sql.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ManagePost extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
@@ -32,7 +34,9 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
     private String condition;
     private EditText edit2; //for Price input
     private String price;
-    private Thread t = null;
+    private Thread t1 = null;
+    private String bookid;
+//    private Thread t2 = null;
 
     private ListView listview1;
     private ArrayAdapter aaSpin;
@@ -41,7 +45,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
     private ArrayList<Book> books  = new ArrayList<>();    //store list of (ArrayList)book
     public static final int requestCode_1 = 100;
     public String url;
-    public Book a;
+    public Book book;
 
 
 
@@ -66,62 +70,17 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         aaList = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, books);
         listview1.setAdapter(aaList);
 
-    }
-    private Runnable background = new Runnable() {
-        public void run(){
-            String URL = "jdbc:mysql://frodo.bentley.edu:3306/bentleybooks";
-            String username = "CS280";
-            String password = "CS280";
-
-            try { //load driver into VM memory
-                Class.forName("com.mysql.jdbc.Driver");
-            } catch (ClassNotFoundException e) {
-                Log.e("JDBC", "Did not load driver");
-
-            }
-
-            Statement stmt = null;
-            Connection con=null;
-            try { //create connection and statement objects
-                con = DriverManager.getConnection (
-                        URL,
-                        username,
-                        password);
-            } catch (SQLException e) {
-                Log.e("JDBC", "problem connecting");
-            }
-
-            try {
-                // execute SQL commands to create table, insert data, select contents
-                String query = "insert into book (isbn,bookcondition, price)"
-                        + "values(?, ?, ?)";
-
-               PreparedStatement p = con.prepareStatement(query);
-               p.setString(1, a.getISBN());
-                p.setString(2, a.getCondition());
-                p.setString(3, a.getPrice());
-                p.execute();
-
-                //clean up
-                t = null;
-
-
-            } catch (SQLException e) {
-                Log.e("JDBC","problems with SQL sent to "+URL+
-                        ": "+e.getMessage());
-            }
-
-            finally {
-                try { //close may throw checked exception
-                    if (con != null)
-                        con.close();
-                } catch(SQLException e) {
-                    Log.e("JDBC", "close connection failed");
-                }
-            };
-
+        t1 = new Thread((backgroundLoad));
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-    };
+
+    }
+
+
 
 
     //create option menu and link it to menu(menu_manageposts) created in xml
@@ -194,8 +153,18 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                bookid = books.get(i).getBookid();
+                Log.e("JDBC", "Start delete: bookid" + bookid);
                 books.remove(i);
-                //add code to delete this book from database
+                //code to delete this book from database
+                t1 = new Thread(backgroundDelete);
+                t1.start();
+                try {
+                    t1.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 aaList.notifyDataSetChanged();
                 dialog.dismiss();
 
@@ -221,10 +190,26 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         if (requestCode == requestCode_1) {
             if (resultCode == Activity.RESULT_OK) {
                 //BookInformation 回傳confirmPost後的code
-                a = new Book(numberISBN, condition, price);
-                books.add(a);
-                t = new Thread(background);
-                t.start();
+                bookid = new SimpleDateFormat("yyMMddhhmmssMs").format(new Date());
+                book = new Book(bookid, numberISBN, condition, price);
+                books.add(book);
+                t1 = new Thread(backgroundAdd);
+                t1.start();
+                try {
+                    t1.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                //when we've added a book into database, do we need to load the database to local again???    what if add to database not successful?
+                books.clear();
+                t1 = new Thread(backgroundLoad);
+                t1.start();
+                try {
+                    t1.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 aaList.notifyDataSetChanged();
             }
@@ -236,6 +221,145 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         spin1.setSelection(0);
         edit2.setText("");
     }
+
+
+    //set up syntax for load books from database
+    private Runnable backgroundLoad = new Runnable() {
+        @Override
+        public void run() {
+            String URL = "jdbc:mysql://frodo.bentley.edu:3306/bentleybooks";
+            String username = "CS280";
+            String password = "CS280";
+
+            try { //load driver into VM memory
+                Class.forName("com.mysql.jdbc.Driver");
+            } catch (ClassNotFoundException e) {
+                Log.e("JDBC", "Did not load driver");
+            }
+
+            Connection con = null;
+            Statement text = null;
+            try {
+                con = DriverManager.getConnection(URL, username, password);
+                text = con.createStatement();
+                ResultSet result = text.executeQuery("select * from book");
+
+                while ( (result.next())){
+                    bookid = result.getString("bookid2");
+                    numberISBN = result.getString("isbn");
+                    condition = result.getString("bookcondition");
+                    price = result.getString("price");
+                    book = new Book(bookid, numberISBN, condition, price);
+                    books.add(book);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }finally {
+                if (con != null) {
+                    try {
+                        con.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    };
+
+    //set up syntax for add book into database
+    private Runnable backgroundAdd = new Runnable() {
+        public void run(){
+            String URL = "jdbc:mysql://frodo.bentley.edu:3306/bentleybooks";
+            String username = "CS280";
+            String password = "CS280";
+
+            try { //load driver into VM memory
+                Class.forName("com.mysql.jdbc.Driver");
+            } catch (ClassNotFoundException e) {
+                Log.e("JDBC", "Did not load driver");
+            }
+
+            Connection con = null;
+            Statement text = null;
+            try { //create connection and statement objects
+                con = DriverManager.getConnection (URL, username, password);
+            } catch (SQLException e) {
+                Log.e("JDBC", "problem connecting");
+            }
+
+            try {
+                // execute SQL commands to create table, insert data, select contents
+                String query = "insert into book (bookid2, isbn,bookcondition, price)"
+                        + "values(?, ?, ?, ?)";
+                PreparedStatement p = con.prepareStatement(query);
+
+                p.setString(1, book.getBookid());
+                p.setString(2, book.getISBN());
+                p.setString(3, book.getCondition());
+                p.setString(4, book.getPrice());
+                p.execute();
+            } catch (SQLException e) {
+                Log.e("JDBC","problems with SQL sent to "+URL+
+                        ": "+e.getMessage());
+            }
+
+            finally {
+                try { //close may throw checked exception
+                    if (con != null)
+                        con.close();
+                } catch(SQLException e) {
+                    Log.e("JDBC", "close connection failed");
+                }
+            };
+
+        }
+    };
+
+    //set up syntax for delete book into database
+    private Runnable backgroundDelete = new Runnable() {
+        @Override
+        public void run() {
+            String URL = "jdbc:mysql://frodo.bentley.edu:3306/bentleybooks";
+            String username = "CS280";
+            String password = "CS280";
+
+            try { //load driver into VM memory
+                Class.forName("com.mysql.jdbc.Driver");
+            } catch (ClassNotFoundException e) {
+                Log.e("JDBC", "Did not load driver");
+            }
+
+            Connection con = null;
+            Statement text = null;
+            try {
+                con = DriverManager.getConnection(URL, username, password);
+
+                con.createStatement().execute("delete from book where bookid2 = '"+ bookid +"'");
+//                text.execute("delete from book where bookid = '7'");
+                Log.e("JDBC", "delete succeed");
+
+//                text = con.createStatement();
+//                ResultSet result = text.executeQuery("select * from book");
+//                while ( (result.next())){
+//                    numberISBN = result.getString("isbn");
+//                    condition = result.getString("bookcondition");
+//                    price = result.getString("price");
+//                    book = new Book(bookid, numberISBN, condition, price);
+//                    books.add(book);
+//                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }finally {
+                if (con != null) {
+                    try {
+                        con.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    };
 
 
 }

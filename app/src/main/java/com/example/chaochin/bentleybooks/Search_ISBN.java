@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,14 +35,14 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
     private ListView listbook;
     private ArrayAdapter aaList;
     private ArrayList<Book> booksShow = new ArrayList<>();
-
+    private Thread t1 = null;
 
     //for test use, this should be replaced by database
-    Book book1 = new Book("111", "good", "11");
-    Book book2 = new Book("222", "bad", "12");
-    Book book3 = new Book("333", "terrible", "13");
-    Book book4 = new Book("111", "excellent", "11");
-    public Book[] booksOnline = {book1, book2, book3, book4};
+//    Book book1 = new Book("111", "good", "11");
+//    Book book2 = new Book("222", "bad", "12");
+//    Book book3 = new Book("333", "terrible", "13");
+//    Book book4 = new Book("111", "excellent", "11");
+//    public Book[] booksOnline = {book1, book2, book3, book4};
 
 
     @Override
@@ -86,7 +93,15 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
     //listener method for (Button)go
     @Override
     public void onClick(View view) {
-        selectISBN(editisbn.getText().toString());
+        isbn = editisbn.getText().toString();
+        t1 = new Thread((backgroundLoad));
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         aaList.notifyDataSetChanged();
     }
 
@@ -99,7 +114,7 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
                 Search_ISBN.this);
         alert.setTitle("Confirm Page:");
         alert.setMessage("Are you sure to buy this book? This will lead you to email page. " +
-                "\nIf your email doesn't start, make sure to to exit email first and do this again");
+                "\nIf your email app has already started, make sure to exit kill email in background first and do this again");
         alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -128,14 +143,61 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
     }
 
     //method to search book based on ISBN
-    public void selectISBN(String isbn) {
-        booksShow.clear();
-//        isbn = editisbn.getText().toString();
-        for (Book book : booksOnline) {
-            if (isbn.equals(book.getISBN()))
-                booksShow.add(book);
+//    public void selectISBN(String isbn) {
+//        booksShow.clear();
+////        isbn = editisbn.getText().toString();
+//        for (Book book : booksOnline) {
+//            if (isbn.equals(book.getISBN()))
+//                booksShow.add(book);
+//        }
+//    }
+
+
+
+
+    //set up syntax for load books from database
+    private Runnable backgroundLoad = new Runnable() {
+        @Override
+        public void run() {
+            String URL = "jdbc:mysql://frodo.bentley.edu:3306/bentleybooks";
+            String username = "CS280";
+            String password = "CS280";
+
+            try { //load driver into VM memory
+                Class.forName("com.mysql.jdbc.Driver");
+            } catch (ClassNotFoundException e) {
+                Log.e("JDBC", "Did not load driver");
+            }
+
+            Connection con = null;
+            Statement text = null;
+            try {
+                con = DriverManager.getConnection(URL, username, password);
+                text = con.createStatement();
+//                executeQuery() Vs executeUpdate() Vs execute() see difference
+                ResultSet result = text.executeQuery("select * from book where isbn = '"+isbn +"'");
+
+                while ( (result.next())){
+                    String bookid = result.getString("bookid2");
+                    String numberISBN = result.getString("isbn");
+                    String condition = result.getString("bookcondition");
+                    String price = result.getString("price");
+                    Book book = new Book(bookid, numberISBN, condition, price);
+                    booksShow.add(book);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }finally {
+                if (con != null) {
+                    try {
+                        con.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
-    }
+    };
 
 }
 

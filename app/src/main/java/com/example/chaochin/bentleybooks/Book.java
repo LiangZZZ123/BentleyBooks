@@ -5,12 +5,14 @@ package com.example.chaochin.bentleybooks;
  */
 
 public class Book extends UserData{
+    private String bookid;
     private String ISBN;
     private String condition;
     private String email = this.getEmail();
     private String price;
 
-    public Book (String ISBN, String condition, String price){
+    public Book (String bookid, String ISBN, String condition, String price){
+        this.bookid = bookid;
         this.ISBN = ISBN;
         this.condition = condition;
         this.price = price;
@@ -19,6 +21,8 @@ public class Book extends UserData{
     public String toString (){
         return "ISBN: " + this.ISBN + ",  " + this.condition + ",   $" + this.price;
     }
+
+    public String getBookid() {return bookid; };
 
     public String getPrice() {
         return price;
