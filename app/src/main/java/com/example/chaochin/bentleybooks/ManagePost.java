@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.sql.*;
 
@@ -28,6 +29,7 @@ import java.util.List;
 public class ManagePost extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
     private static final String TAG = "ManagePost";
 
+    private TextView viewName;
     private EditText edit1; //for ISBN input
     private String numberISBN;
     private Spinner spin1;
@@ -53,12 +55,15 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.manageposts);
 
-        edit1 = (EditText)findViewById(R.id.editISBN);
+        viewName = findViewById(R.id.viewUsername);
+        viewName.setText(Search_ISBN.email);
+
+        edit1 = findViewById(R.id.editISBN);
         edit2 = findViewById(R.id.editPrice);
 
 
         //set for spinner
-        spin1 = (Spinner) findViewById(R.id.spinCondition);
+        spin1 = findViewById(R.id.spinCondition);
         spin1.setOnItemSelectedListener(this);
         aaSpin = new ArrayAdapter(this, android.R.layout.simple_list_item_1, conditions);
         spin1.setAdapter(aaSpin);

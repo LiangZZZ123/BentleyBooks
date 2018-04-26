@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener {
+    private TextView viewEmail;
+    public static String email;
     private EditText editisbn;
     private String isbn;
     private TextView username;
@@ -36,6 +38,7 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
     private ArrayAdapter aaList;
     private ArrayList<Book> booksShow = new ArrayList<>();
     private Thread t1 = null;
+
 
     //for test use, this should be replaced by database
 //    Book book1 = new Book("111", "good", "11");
@@ -56,10 +59,16 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
 //        actionBar.setDisplayUseLogoEnabled(false);
 
         //give reference
-        username = (TextView) findViewById(R.id.username_view);
+        viewEmail = findViewById(R.id.viewUsername);
+        username = (TextView) findViewById(R.id.viewUsername);
         editisbn = (EditText) findViewById(R.id.search_edit);
         go = (Button) findViewById(R.id.search_button);
         listbook = (ListView) findViewById(R.id.list);
+
+        //receive userEmail and show it in interface
+        Intent intent = getIntent();
+        email = intent.getStringExtra("emailIntent");
+        viewEmail.setText(email);
 
         go.setOnClickListener(this);
 

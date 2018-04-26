@@ -72,8 +72,8 @@ public class Login extends AppCompatActivity  {
     public void loginCheck() {
             if (loginInfo) {
                 Intent intent1 = new Intent(Login.this, Search_ISBN.class);
-                startActivity(intent1);
                 intent1.putExtra("emailIntent",email);
+                startActivity(intent1);
                 finish();
             } else {
                 Toast.makeText(Login.this, "No account records", Toast.LENGTH_LONG).show();
