@@ -7,15 +7,8 @@ public class UserData extends Application{
     private String password;
     private String email;
     private String phone;
-    private String userName;
     private ArrayList<Book> Books;
 
-    public String getUserName() {
-        return userName;
-    }
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
     public String getPhone() {
         return phone;
     }

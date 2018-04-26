@@ -7,7 +7,6 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.content.Intent;
 
 public class BookInformation extends AppCompatActivity  {
 
