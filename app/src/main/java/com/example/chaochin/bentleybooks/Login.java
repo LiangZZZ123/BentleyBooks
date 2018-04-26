@@ -28,7 +28,6 @@ public class Login extends AppCompatActivity  {
     public String email;
     private String password;
     private boolean loginInfo = false;
-    public char a;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +73,7 @@ public class Login extends AppCompatActivity  {
             if (loginInfo) {
                 Intent intent1 = new Intent(Login.this, Search_ISBN.class);
                 startActivity(intent1);
+                intent1.putExtra("emailIntent",email);
                 finish();
             } else {
                 Toast.makeText(Login.this, "No account records", Toast.LENGTH_LONG).show();
