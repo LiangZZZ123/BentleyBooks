@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -25,9 +26,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class ManagePost extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
-    private static final String TAG = "ManagePost";
+public class ManagePost extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, TextToSpeech.OnInitListener {
+    private static final String tag = "ManagePost";
 
     private TextView viewName;
     private EditText edit1; //for ISBN input
@@ -38,7 +40,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
     private String price;
     private Thread t1 = null;
     private String bookid;
-//    private Thread t2 = null;
+    private TextToSpeech speaker;
 
     private ListView listview1;
     private ArrayAdapter aaSpin;
@@ -56,7 +58,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         setContentView(R.layout.manageposts);
 
         viewName = findViewById(R.id.viewUsername);
-        viewName.setText(Search_ISBN.email);
+        viewName.setText(Search_ISBN.user.getName());
 
         edit1 = findViewById(R.id.editISBN);
         edit2 = findViewById(R.id.editPrice);
@@ -82,6 +84,8 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        speaker = new TextToSpeech(this, this);
 
     }
 
@@ -196,7 +200,8 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
             if (resultCode == Activity.RESULT_OK) {
                 //BookInformation 回傳confirmPost後的code
                 bookid = new SimpleDateFormat("yyMMddhhmmssMs").format(new Date());
-                book = new Book(bookid, numberISBN, condition, price);
+                book = new Book(bookid, numberISBN, condition, price, Search_ISBN.user.getName(), Search_ISBN.user.getEmail());
+                Toast.makeText(ManagePost.this, "I'm" + Search_ISBN.user.getName(), Toast.LENGTH_LONG).show();
                 books.add(book);
                 t1 = new Thread(backgroundAdd);
                 t1.start();
@@ -217,6 +222,15 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
                 }
 
                 aaList.notifyDataSetChanged();
+
+                if (speaker.isSpeaking()) {
+                    Log.i(tag, "Speaker Speaking");
+                    speaker.stop();
+                    // else start speech
+                } else {
+                    Log.i(tag, "Speaker Not Already Speaking");
+                    speak( "You have successfully posted a book");
+                }
             }
             if(resultCode == Activity.RESULT_CANCELED) {
                 //BookInformation 回傳cancel後的code
@@ -246,6 +260,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
             Statement text = null;
             try {
                 con = DriverManager.getConnection(URL, username, password);
+
                 text = con.createStatement();
                 ResultSet result = text.executeQuery("select * from book");
 
@@ -254,7 +269,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
                     numberISBN = result.getString("isbn");
                     condition = result.getString("bookcondition");
                     price = result.getString("price");
-                    book = new Book(bookid, numberISBN, condition, price);
+                    book = new Book(bookid, numberISBN, condition, price, Search_ISBN.user.getName(), Search_ISBN.user.getEmail());
                     books.add(book);
                 }
             } catch (SQLException e) {
@@ -294,14 +309,16 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
 
             try {
                 // execute SQL commands to create table, insert data, select contents
-                String query = "insert into book (bookid2, isbn,bookcondition, price)"
-                        + "values(?, ?, ?, ?)";
+                String query = "insert into book (bookid2, isbn,bookcondition, price, seller, email)"
+                        + "values(?, ?, ?, ?, ?, ?)";
                 PreparedStatement p = con.prepareStatement(query);
 
                 p.setString(1, book.getBookid());
                 p.setString(2, book.getISBN());
                 p.setString(3, book.getCondition());
                 p.setString(4, book.getPrice());
+                p.setString(5, Search_ISBN.user.getName());
+                p.setString(6, Search_ISBN.user.getEmail());
                 p.execute();
             } catch (SQLException e) {
                 Log.e("JDBC","problems with SQL sent to "+URL+
@@ -342,17 +359,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
                 con.createStatement().execute("delete from book where bookid2 = '"+ bookid +"'");
 //                text.execute("delete from book where bookid = '7'");
                 Log.e("JDBC", "delete succeed");
-
-//                text = con.createStatement();
-//                ResultSet result = text.executeQuery("select * from book");
-//                while ( (result.next())){
-//                    numberISBN = result.getString("isbn");
-//                    condition = result.getString("bookcondition");
-//                    price = result.getString("price");
-//                    book = new Book(bookid, numberISBN, condition, price);
-//                    books.add(book);
-//                }
-            } catch (SQLException e) {
+                } catch (SQLException e) {
                 e.printStackTrace();
             }finally {
                 if (con != null) {
@@ -366,6 +373,47 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         }
     };
 
+
+    //    ------------------------------------------------TextToSpeechPart_Begin------------------------------------------------------------------
+    public void speak(String output) {
+        speaker.speak(output, TextToSpeech.QUEUE_FLUSH, null, "Id 0");
+    }
+
+    // Implements TextToSpeech.OnInitListener.
+    public void onInit(int status) {
+        // status can be either TextToSpeech.SUCCESS or TextToSpeech.ERROR.
+        if (status == TextToSpeech.SUCCESS) {
+            // Set preferred language to US english.
+            // If a language is not be available, the result will indicate it.
+            int result = speaker.setLanguage(Locale.US);
+            //int result = speaker.setLanguage(Locale.FRANCE);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA ||
+                    result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                // Language data is missing or the language is not supported.
+                Log.e(tag, "Language is not available.");
+            } else {
+                // The TTS engine has been successfully initialized
+                // speak("Please enter your tasks");
+                Log.i(tag, "TTS Initialization successful.");
+            }
+        } else {
+            // Initialization failed.
+            Log.e(tag, "Could not initialize TextToSpeech.");
+        }
+    }
+
+    // on destroy
+    public void onDestroy() {
+
+        // shut down TTS engine
+        if (speaker != null) {
+            speaker.stop();
+            speaker.shutdown();
+        }
+        super.onDestroy();
+    }
+//    ------------------------------------------------TextToSpeechPartEnd------------------------------------------------------------------
 
 }
 

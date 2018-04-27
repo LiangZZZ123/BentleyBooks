@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -26,10 +27,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener {
+public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener{
+    private static final String tag = "Search_ISBN";
+
     private TextView viewEmail;
-    public static String email;
     private EditText editisbn;
     private String isbn;
     private TextView username;
@@ -37,7 +40,9 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
     private ListView listbook;
     private ArrayAdapter aaList;
     private ArrayList<Book> booksShow = new ArrayList<>();
+    public static UserData user;
     private Thread t1 = null;
+
 
 
     //for test use, this should be replaced by database
@@ -65,10 +70,14 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         go = (Button) findViewById(R.id.search_button);
         listbook = (ListView) findViewById(R.id.list);
 
-        //receive userEmail and show it in interface
+        //receive user's information, create user object and show username in interface
         Intent intent = getIntent();
-        email = intent.getStringExtra("emailIntent");
-        viewEmail.setText(email);
+        String email = intent.getStringExtra("email");
+        String phone = intent.getStringExtra("phone");
+        String name = intent.getStringExtra("name");
+        String password = intent.getStringExtra("password");
+        user = new UserData(email, phone, name, password);
+        viewEmail.setText(user.getName());
 
         go.setOnClickListener(this);
 
@@ -76,6 +85,9 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         listbook.setOnItemLongClickListener(this);
         aaList = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, booksShow);
         listbook.setAdapter(aaList);
+
+//        speaker = new TextToSpeech(this, this);
+
 
     }
 
@@ -129,9 +141,9 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
             public void onClick(DialogInterface dialog, int which) {
                 //intent for sending email
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"));
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"zhangliangjustin@gmail.com"});
-                emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi,\n\nI want to buy your posted book: <<"
-                        + booksShow.get(i) + ">>.\nCan we meet at Lacava tomorrow 6 pm?\nThanks.\n\n\nZhang Liang");
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{booksShow.get(i).getEmail()});
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi "+booksShow.get(i).getseller()+",\n\nI want to buy your posted book: <<"
+                        + booksShow.get(i) + ">>.\nCan we meet at Lacava tomorrow 6 pm?\nThanks.\n\n\n"+user.getName()+"");
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Request for book");
                 startActivity(emailIntent);
                 //For refine: add code to show this book is required by once
@@ -191,7 +203,9 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
                     String numberISBN = result.getString("isbn");
                     String condition = result.getString("bookcondition");
                     String price = result.getString("price");
-                    Book book = new Book(bookid, numberISBN, condition, price);
+                    String seller = result.getString("seller");
+                    String email = result.getString("email");
+                    Book book = new Book(bookid, numberISBN, condition, price, seller, email);
                     booksShow.add(book);
                 }
             } catch (SQLException e) {
@@ -207,6 +221,10 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
             }
         }
     };
+
+
+
+
 
 }
 
