@@ -29,6 +29,10 @@ public class Login extends AppCompatActivity  {
     private String password;
     private boolean loginInfo = false;
 
+    /*To create UserData object*/
+    private String name;
+    private String phone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +76,10 @@ public class Login extends AppCompatActivity  {
     public void loginCheck() {
             if (loginInfo) {
                 Intent intent1 = new Intent(Login.this, Search_ISBN.class);
-                intent1.putExtra("emailIntent",email);
+                intent1.putExtra("email",email);
+                intent1.putExtra("phone",phone);
+                intent1.putExtra("name", name);
+                intent1.putExtra("password", password);
                 startActivity(intent1);
                 finish();
             } else {
@@ -112,13 +119,15 @@ public class Login extends AppCompatActivity  {
                 stmt = con.createStatement();
 
                 ResultSet result = stmt.executeQuery(
-                        "SELECT email, pw FROM user;");
+                        "SELECT * FROM user;");
 
 
                 while (result.next()) {
                     String emailFromDB = result.getString("email");
                     String pwFromDB = result.getString("pw");
                     if(emailFromDB.equals(email) && pwFromDB.equals(password)){
+                        name =  result.getString("name");
+                        phone = result.getString("phone");
                         loginInfo = true;
                         break;
                     }

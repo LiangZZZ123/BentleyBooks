@@ -4,11 +4,11 @@ package com.example.chaochin.bentleybooks;
  * Created by chaochin on 2018/4/11.
  */
 
-public class Book extends UserData{
+public class Book {
     private String bookid;
     private String ISBN;
     private String condition;
-    private String email = this.getEmail();
+    //private String email = this.getEmail();
     private String price;
 
     public Book (String bookid, String ISBN, String condition, String price){
