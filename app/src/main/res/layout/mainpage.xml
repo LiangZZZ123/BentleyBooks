@@ -27,16 +27,38 @@
         android:id="@+id/search_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go"
+        android:text="Search"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@id/search_edit"/>
+
+    <TextView
+        android:id="@+id/view_isbn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/check_button"
+        android:layout_alignBottom="@+id/check_button"
+        android:layout_toStartOf="@+id/check_button"
+        android:text="Click the button to check your ISBN"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/check_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/search_edit"
+        android:text="Check" />
+
+
+
+
 
     <ListView
         android:id="@+id/list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/search_edit"
+        android:layout_below="@id/view_isbn"
         android:drawSelectorOnTop="false"/>
 
 
