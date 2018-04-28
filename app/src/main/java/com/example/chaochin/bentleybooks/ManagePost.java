@@ -63,7 +63,6 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         edit1 = findViewById(R.id.editISBN);
         edit2 = findViewById(R.id.editPrice);
 
-
         //set for spinner
         spin1 = findViewById(R.id.spinCondition);
         spin1.setOnItemSelectedListener(this);
@@ -88,8 +87,6 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         speaker = new TextToSpeech(this, this);
 
     }
-
-
 
 
     //create option menu and link it to menu(menu_manageposts) created in xml
@@ -126,7 +123,6 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 
     //Spinner manipulation
@@ -199,7 +195,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == requestCode_1) {
             if (resultCode == Activity.RESULT_OK) {
-                //BookInformation 回傳confirmPost後的code
+                // add book to MYSQL if click "Result_OK" in BookInformation
                 bookid = new SimpleDateFormat("yyMMddhhmmssMs").format(new Date());
                 book = new Book(bookid, numberISBN, condition, price, Search_ISBN.user.getName(), Search_ISBN.user.getEmail());
                 Toast.makeText(ManagePost.this, "I'm" + Search_ISBN.user.getName(), Toast.LENGTH_LONG).show();
@@ -234,14 +230,13 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
                 }
             }
             if(resultCode == Activity.RESULT_CANCELED) {
-                //BookInformation 回傳cancel後的code
+                //do nothing if click "Result_canceled" in BookInformation
             }
         }
         edit1.setText("");
         spin1.setSelection(0);
         edit2.setText("");
     }
-
 
     //set up syntax for load books from database
     private Runnable backgroundLoad = new Runnable() {
@@ -309,7 +304,6 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
             }
 
             try {
-                // execute SQL commands to create table, insert data, select contents
                 String query = "insert into book (bookid2, isbn,bookcondition, price, seller, email)"
                         + "values(?, ?, ?, ?, ?, ?)";
                 PreparedStatement p = con.prepareStatement(query);
@@ -333,8 +327,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
                 } catch(SQLException e) {
                     Log.e("JDBC", "close connection failed");
                 }
-            };
-
+            }
         }
     };
 
@@ -358,7 +351,6 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
                 con = DriverManager.getConnection(URL, username, password);
 
                 con.createStatement().execute("delete from book where bookid2 = '"+ bookid +"'");
-//                text.execute("delete from book where bookid = '7'");
                 Log.e("JDBC", "delete succeed");
                 } catch (SQLException e) {
                 e.printStackTrace();

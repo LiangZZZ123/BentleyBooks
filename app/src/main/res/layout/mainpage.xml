@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingBottom="5dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="5dp">
 
     <TextView
         android:id="@+id/viewUsername"
@@ -38,8 +42,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/check_button"
         android:layout_alignBottom="@+id/check_button"
-        android:layout_toStartOf="@+id/check_button"
-        android:text="Click the button to check your ISBN"
+        android:text=" Not sure about the ISBN ?"
+        android:gravity="left"
         android:textSize="18sp" />
 
     <Button
@@ -49,10 +53,6 @@
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/search_edit"
         android:text="Check" />
-
-
-
-
 
     <ListView
         android:id="@+id/list"

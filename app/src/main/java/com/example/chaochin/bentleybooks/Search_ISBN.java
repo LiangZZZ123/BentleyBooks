@@ -1,12 +1,10 @@
 package com.example.chaochin.bentleybooks;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -21,22 +19,18 @@ import android.widget.TextView;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener{
     private static final String tag = "Search_ISBN";
 
-    private TextView viewEmail;
+    private TextView viewName;
     private EditText editisbn;
     private String isbn;
-    private TextView username;
-    private Button go;
+    private Button search;
     private String url;
 
     private Button check;
@@ -62,16 +56,10 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainpage);
 
-//        ???
-//        ActionBar actionBar = getActionBar();
-//        actionBar.setDisplayShowTitleEnabled(false);
-//        actionBar.setDisplayUseLogoEnabled(false);
-
         //give reference
-        viewEmail = findViewById(R.id.viewUsername);
-        username = (TextView) findViewById(R.id.viewUsername);
+        viewName = findViewById(R.id.viewUsername);
         editisbn = (EditText) findViewById(R.id.search_edit);
-        go = (Button) findViewById(R.id.search_button);
+        search = (Button) findViewById(R.id.search_button);
         check=(Button) findViewById(R.id.check_button);
         listbook = (ListView) findViewById(R.id.list);
 
@@ -83,18 +71,15 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         String name = intent.getStringExtra("name");
         String password = intent.getStringExtra("password");
         user = new UserData(email, phone, name, password);
-        viewEmail.setText(user.getName());
+        viewName.setText(user.getName());
 
-        go.setOnClickListener(this);
+        search.setOnClickListener(this);
         check.setOnClickListener(this);
 
         listbook.setOnItemClickListener(this);
         listbook.setOnItemLongClickListener(this);
         aaList = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, booksShow);
         listbook.setAdapter(aaList);
-
-//        speaker = new TextToSpeech(this, this);
-
 
     }
 
@@ -121,10 +106,7 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
 
 // button check
 
-
-
-
-    //listener method for (Button)go
+    //listener method for (Button)search
     @Override
     public void onClick(View view) throws SecurityException {
         switch (view.getId()) {
@@ -179,24 +161,12 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
                 dialog.dismiss();
             }
         });
         alert.show();
         return true;
     }
-
-    //method to search book based on ISBN
-//    public void selectISBN(String isbn) {
-//        booksShow.clear();
-////        isbn = editisbn.getText().toString();
-//        for (Book book : booksOnline) {
-//            if (isbn.equals(book.getISBN()))
-//                booksShow.add(book);
-//        }
-//    }
-
 
     //set up syntax for load books from database
     private Runnable backgroundLoad = new Runnable() {
