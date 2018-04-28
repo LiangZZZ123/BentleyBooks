@@ -104,6 +104,7 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
                 aaList.notifyDataSetChanged();
                 Intent intentManagePost = new Intent(this, ManagePost.class);
                 startActivity(intentManagePost);
+                onPause();
                 return true;
 
             default:
@@ -174,8 +175,6 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
 //    }
 
 
-
-
     //set up syntax for load books from database
     private Runnable backgroundLoad = new Runnable() {
         @Override
@@ -221,11 +220,4 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
             }
         }
     };
-
-
-
-
-
 }
-
-
