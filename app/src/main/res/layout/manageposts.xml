@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="ISBN(10 or 13 numbers)"
+            android:text="ISBN(13 numbers)"
             android:textSize="18sp"
             android:textColor="#ff000000"/>
 

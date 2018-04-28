@@ -117,8 +117,9 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
                 return true;
 
             case R.id.returnPage:
-                Intent intentMainPage = new Intent(this, Search_ISBN.class);
-                startActivity(intentMainPage);
+//                Intent intentMainPage = new Intent(this, Search_ISBN.class);
+//                startActivity(intentMainPage);
+                finish();
                 return true;
 
             default:
