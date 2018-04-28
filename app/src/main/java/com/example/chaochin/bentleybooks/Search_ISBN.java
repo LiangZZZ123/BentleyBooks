@@ -1,13 +1,11 @@
 package com.example.chaochin.bentleybooks;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,19 +16,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.view.ViewGroup;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener{
     private static final String tag = "Search_ISBN";
@@ -58,7 +55,10 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mainpage);
+        setContentView(R.layout.search);
+        //LinearLayout layout = new LinearLayout(getApplication());
+        //layout.setBackgroundColor(Color.TRANSPARENT);
+          //setBackgroundColor(Color.TRANSPARENT);
 
 //        ???
 //        ActionBar actionBar = getActionBar();
@@ -85,6 +85,8 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
 
         listbook.setOnItemClickListener(this);
         listbook.setOnItemLongClickListener(this);
+
+
         aaList = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, booksShow){
             @Override
             public View getView(int position, View convertView, ViewGroup parent){
@@ -106,9 +108,7 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
 
         listbook.setAdapter(aaList);
 
-//        speaker = new TextToSpeech(this, this);
 
-          //color= ContextCompat.getColor(context, R.color.colorSienna);
 
     }
 
