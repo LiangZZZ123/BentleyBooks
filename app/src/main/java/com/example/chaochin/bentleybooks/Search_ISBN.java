@@ -37,11 +37,15 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
     private String isbn;
     private TextView username;
     private Button go;
+    private String url;
+
+    private Button check;
     private ListView listbook;
     private ArrayAdapter aaList;
     private ArrayList<Book> booksShow = new ArrayList<>();
     public static UserData user;
     private Thread t1 = null;
+
 
 
 
@@ -68,7 +72,9 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         username = (TextView) findViewById(R.id.viewUsername);
         editisbn = (EditText) findViewById(R.id.search_edit);
         go = (Button) findViewById(R.id.search_button);
+        check=(Button) findViewById(R.id.check_button);
         listbook = (ListView) findViewById(R.id.list);
+
 
         //receive user's information, create user object and show username in interface
         Intent intent = getIntent();
@@ -80,6 +86,7 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         viewEmail.setText(user.getName());
 
         go.setOnClickListener(this);
+        check.setOnClickListener(this);
 
         listbook.setOnItemClickListener(this);
         listbook.setOnItemLongClickListener(this);
@@ -111,21 +118,37 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         }
     }
 
+// button check
+
+
+
+
     //listener method for (Button)go
     @Override
-    public void onClick(View view) {
-        isbn = editisbn.getText().toString();
-        t1 = new Thread((backgroundLoad));
-        t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public void onClick(View view) throws SecurityException {
+        switch (view.getId()) {
+            case R.id.search_button:
+                isbn = editisbn.getText().toString();
+                t1 = new Thread((backgroundLoad));
+                t1.start();
+                try {
+                    t1.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                aaList.notifyDataSetChanged();
+
+                break;
+
+            case R.id.check_button:
+                isbn = editisbn.getText().toString();
+                url = "http://www.bookfinder4u.com/IsbnSearch.aspx?isbn=" + isbn;
+                startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)));
+
+                break;
+
         }
-
-        aaList.notifyDataSetChanged();
     }
-
     //listener method for listview
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) { }
