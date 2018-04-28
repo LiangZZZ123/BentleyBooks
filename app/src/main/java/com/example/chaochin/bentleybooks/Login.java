@@ -75,7 +75,7 @@ public class Login extends AppCompatActivity  {
 
     public void loginCheck() {
             if (loginInfo) {
-                Intent intent1 = new Intent(Login.this, Search_ISBN.class);
+                Intent intent1 = new Intent(Login.this, Animation.class);
                 intent1.putExtra("email",email);
                 intent1.putExtra("phone",phone);
                 intent1.putExtra("name", name);
