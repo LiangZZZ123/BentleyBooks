@@ -1,6 +1,9 @@
 package com.example.chaochin.bentleybooks;
 
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +17,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 
 /**
  * A login screen that offers login via email/password.
@@ -28,6 +33,11 @@ public class Login extends AppCompatActivity  {
     public String email;
     private String password;
     private boolean loginInfo = false;
+    private NotificationManager mNotificationManager;
+    private Notification notifyDetails;
+    private String contentTitle = "Login Success!";
+    private String contentText = "Get back to Application by clicking me";
+    private String tickerText = "New Alert, Click Me !!!";
 
     /*To create UserData object*/
     private String name;
@@ -81,6 +91,61 @@ public class Login extends AppCompatActivity  {
                 intent1.putExtra("name", name);
                 intent1.putExtra("password", password);
                 startActivity(intent1);
+
+                mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+                // The id of the channel.
+                String id = "my_channel_01";
+
+// The user-visible name of the channel.
+                CharSequence names = "hi";
+// The user-visible description of the channel.
+                String description = "yoyo";
+                int importance = NotificationManager.IMPORTANCE_LOW;
+                NotificationChannel mChannel = new NotificationChannel(id, name,importance);
+// Configure the notification channel.
+                mChannel.setDescription(description);
+                mChannel.enableLights(true);
+// Sets the notification light color for notifications posted to this
+// channel, if the device supports this feature.
+                mChannel.enableVibration(true);
+
+                mNotificationManager.createNotificationChannel(mChannel);
+
+
+                //create intent for action when notification selected
+                //from expanded status bar
+                Intent notifyIntent = new Intent(this, Search_ISBN.class);
+                notifyIntent.putExtra("email",email);
+                notifyIntent.putExtra("phone",phone);
+                notifyIntent.putExtra("name", name);
+                notifyIntent.putExtra("password", password);
+                //create pending intent to wrap intent so that it
+                //will fire when notification selected.
+                PendingIntent pendingIntent = PendingIntent.getActivity(
+                        this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
+                );
+                // Sets an ID for the notification, so it can be updated.
+
+                int notifyID = 1;
+
+// The id of the channel.
+                String CHANNEL_ID = "my_channel_01";
+
+                //build notification object and set parameters
+                notifyDetails =
+                        new Notification.Builder(this)
+                                .setContentIntent(pendingIntent)
+
+                                .setContentTitle(contentTitle)   //set Notification text and icon
+                                .setContentText(contentText)
+                                .setSmallIcon(R.drawable.droid)
+                                .setTicker(tickerText)            //set status bar text
+                                .setWhen(System.currentTimeMillis())    //timestamp when event occurs
+                                .setAutoCancel(true)     //cancel Notification after clicking on it
+                                .setChannelId(CHANNEL_ID)
+                                .build();
+              mNotificationManager.notify(notifyID, notifyDetails);
                 finish();
             } else {
                 Toast.makeText(Login.this, "No account records", Toast.LENGTH_LONG).show();

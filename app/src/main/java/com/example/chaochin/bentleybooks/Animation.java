@@ -6,10 +6,14 @@ package com.example.chaochin.bentleybooks;
 import java.util.Timer;
 import java.util.TimerTask;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.content.Intent;
+import android.widget.TextView;
 
 public class Animation extends Activity {
 
@@ -20,6 +24,7 @@ public class Animation extends Activity {
         setContentView(R.layout.animation_layout);
         ImageView img = (ImageView) findViewById(R.id.simple_anim);
         img.setBackgroundResource(R.drawable.animation);
+
 
         AnimationRoutine1 task1 = new AnimationRoutine1();
         AnimationRoutine2 task2 = new AnimationRoutine2();
@@ -33,10 +38,8 @@ public class Animation extends Activity {
         Timer t = new Timer();
         t.schedule(task1, 0);
         Timer t2 = new Timer();
-        t2.schedule(task2, 4000);
-
+        t2.schedule(task2, 2000);
     }
-
     class AnimationRoutine1 extends TimerTask {
 
         @Override
