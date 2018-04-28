@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="5dp"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
-    android:paddingTop="5dp">
-
+    >
     <TextView
         android:id="@+id/viewUsername"
         android:layout_width="match_parent"
@@ -14,6 +11,7 @@
         android:layout_gravity="left"
         android:textSize="26sp"
         android:text="User"
+
         />
 
     <EditText
@@ -31,34 +29,17 @@
         android:id="@+id/search_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Search"
+        android:text="Go"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@id/search_edit"/>
-
-    <TextView
-        android:id="@+id/view_isbn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/check_button"
-        android:layout_alignBottom="@+id/check_button"
-        android:text=" Not sure about the ISBN ?"
-        android:gravity="left"
-        android:textSize="18sp" />
-
-    <Button
-        android:id="@+id/check_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/search_edit"
-        android:text="Check" />
 
     <ListView
         android:id="@+id/list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/view_isbn"
+        android:layout_below="@id/search_edit"
+        android:background="@color/colorLeo"
         android:drawSelectorOnTop="false"/>
 
 

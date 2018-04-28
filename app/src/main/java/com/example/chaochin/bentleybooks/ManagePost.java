@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -73,7 +75,23 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         listview1 = findViewById(R.id.listBooks);
         listview1.setOnItemClickListener(this);
         listview1.setOnItemLongClickListener(this);
-        aaList = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, books);
+        aaList = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, books){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                // Get the Item from ListView
+                View view = super.getView(position, convertView, parent);
+
+                // Initialize a TextView for ListView each Item
+                TextView tv = (TextView) view.findViewById(android.R.id.text1);
+
+                // Set the text color of TextView (ListView Item)
+                int color= ContextCompat.getColor(getContext(), R.color.colorSienna);
+                tv.setTextColor(color);
+
+                // Generate ListView Item using TextView
+                return view;
+            }
+        };
         listview1.setAdapter(aaList);
 
         t1 = new Thread((backgroundLoad));

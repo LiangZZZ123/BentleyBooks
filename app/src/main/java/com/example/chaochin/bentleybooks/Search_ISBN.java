@@ -1,10 +1,14 @@
 package com.example.chaochin.bentleybooks;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -16,31 +20,31 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.view.ViewGroup;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener{
     private static final String tag = "Search_ISBN";
 
-    private TextView viewName;
+    private TextView viewEmail;
     private EditText editisbn;
     private String isbn;
-    private Button search;
-    private String url;
-
-    private Button check;
+    private TextView username;
+    private Button go;
     private ListView listbook;
     private ArrayAdapter aaList;
     private ArrayList<Book> booksShow = new ArrayList<>();
     public static UserData user;
     private Thread t1 = null;
-
-
 
 
     //for test use, this should be replaced by database
@@ -56,13 +60,17 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainpage);
 
-        //give reference
-        viewName = findViewById(R.id.viewUsername);
-        editisbn = (EditText) findViewById(R.id.search_edit);
-        search = (Button) findViewById(R.id.search_button);
-        check=(Button) findViewById(R.id.check_button);
-        listbook = (ListView) findViewById(R.id.list);
+//        ???
+//        ActionBar actionBar = getActionBar();
+//        actionBar.setDisplayShowTitleEnabled(false);
+//        actionBar.setDisplayUseLogoEnabled(false);
 
+        //give reference
+        viewEmail = findViewById(R.id.viewUsername);
+        username = (TextView) findViewById(R.id.viewUsername);
+        editisbn = (EditText) findViewById(R.id.search_edit);
+        go = (Button) findViewById(R.id.search_button);
+        listbook = (ListView) findViewById(R.id.list);
 
         //receive user's information, create user object and show username in interface
         Intent intent = getIntent();
@@ -71,15 +79,36 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         String name = intent.getStringExtra("name");
         String password = intent.getStringExtra("password");
         user = new UserData(email, phone, name, password);
-        viewName.setText(user.getName());
+        viewEmail.setText(user.getName());
 
-        search.setOnClickListener(this);
-        check.setOnClickListener(this);
+        go.setOnClickListener(this);
 
         listbook.setOnItemClickListener(this);
         listbook.setOnItemLongClickListener(this);
-        aaList = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, booksShow);
+        aaList = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, booksShow){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                // Get the Item from ListView
+                View view = super.getView(position, convertView, parent);
+
+                // Initialize a TextView for ListView each Item
+                TextView tv = (TextView) view.findViewById(android.R.id.text1);
+
+                // Set the text color of TextView (ListView Item)
+
+                int color= ContextCompat.getColor(getContext(), R.color.colorSienna);
+                tv.setTextColor(color);
+
+                // Generate ListView Item using TextView
+                return view;
+            }
+        };
+
         listbook.setAdapter(aaList);
+
+//        speaker = new TextToSpeech(this, this);
+
+          //color= ContextCompat.getColor(context, R.color.colorSienna);
 
     }
 
@@ -96,7 +125,6 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
                 aaList.notifyDataSetChanged();
                 Intent intentManagePost = new Intent(this, ManagePost.class);
                 startActivity(intentManagePost);
-                onPause();
                 return true;
 
             default:
@@ -104,39 +132,27 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         }
     }
 
-// button check
-
-    //listener method for (Button)search
+    //listener method for (Button)go
     @Override
-    public void onClick(View view) throws SecurityException {
-        switch (view.getId()) {
-            case R.id.search_button:
-                isbn = editisbn.getText().toString();
-                t1 = new Thread((backgroundLoad));
-                t1.start();
-                try {
-                    t1.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                aaList.notifyDataSetChanged();
-
-                break;
-
-            case R.id.check_button:
-                isbn = editisbn.getText().toString();
-                url = "http://www.bookfinder4u.com/IsbnSearch.aspx?isbn=" + isbn;
-                startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)));
-
-                break;
-
+    public void onClick(View view) {
+        isbn = editisbn.getText().toString();
+        t1 = new Thread((backgroundLoad));
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+        aaList.notifyDataSetChanged();
     }
-    //listener method for listview
+
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) { }
-    @Override
+
+
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
+
         AlertDialog.Builder alert = new AlertDialog.Builder(
                 Search_ISBN.this);
         alert.setTitle("Confirm Page:");
@@ -161,12 +177,26 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
                 dialog.dismiss();
             }
         });
         alert.show();
         return true;
     }
+
+    //method to search book based on ISBN
+//    public void selectISBN(String isbn) {
+//        booksShow.clear();
+////        isbn = editisbn.getText().toString();
+//        for (Book book : booksOnline) {
+//            if (isbn.equals(book.getISBN()))
+//                booksShow.add(book);
+//        }
+//    }
+
+
+
 
     //set up syntax for load books from database
     private Runnable backgroundLoad = new Runnable() {
@@ -213,4 +243,11 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
             }
         }
     };
+
+
+
+
+
 }
+
+

@@ -105,6 +105,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawSelectorOnTop="false"
+        android:background="@color/colorLeo"
         android:listSelector="#d6d1d1">
     </ListView>
 
