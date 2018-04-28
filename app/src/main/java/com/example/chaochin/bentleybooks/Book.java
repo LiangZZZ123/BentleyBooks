@@ -4,21 +4,28 @@ package com.example.chaochin.bentleybooks;
  * Created by chaochin on 2018/4/11.
  */
 
-public class Book extends UserData{
+public class Book {
+    private String bookid;
     private String ISBN;
     private String condition;
-    private String email = this.getEmail();
     private String price;
+    private String email;
+    private String seller;
 
-    public Book (String ISBN, String condition, String price){
+    public Book (String bookid, String ISBN, String condition, String price, String seller, String email ){
+        this.bookid = bookid;
         this.ISBN = ISBN;
         this.condition = condition;
         this.price = price;
+        this.seller = seller;
+        this.email = email;
 
     }
     public String toString (){
         return "ISBN: " + this.ISBN + ",  " + this.condition + ",   $" + this.price;
     }
+
+    public String getBookid() {return bookid; };
 
     public String getPrice() {
         return price;
@@ -42,5 +49,13 @@ public class Book extends UserData{
 
     public void setCondition(String condition) {
         this.condition = condition;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getseller() {
+        return seller;
     }
 }
