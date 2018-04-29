@@ -148,7 +148,6 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     Log.e("JDBC", "close connection failed");
                 }
             };
-
         }
     };
 }

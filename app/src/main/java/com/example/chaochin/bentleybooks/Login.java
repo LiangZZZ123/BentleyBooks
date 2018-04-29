@@ -92,8 +92,8 @@ public class Login extends AppCompatActivity  {
                 intent1.putExtra("password", password);
                 startActivity(intent1);
 
-                mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
+                /*Start of Notification codes*/
+                 mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 // The id of the channel.
                 String id = "my_channel_01";
 
@@ -108,7 +108,6 @@ public class Login extends AppCompatActivity  {
 
                 mNotificationManager.createNotificationChannel(mChannel);
 
-
                 //create intent for action when notification selected
                 //from expanded status bar
                 Intent notifyIntent = new Intent(this, Search_ISBN.class);
@@ -120,11 +119,10 @@ public class Login extends AppCompatActivity  {
                 PendingIntent pendingIntent = PendingIntent.getActivity(
                         this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
                 );
+                
                 // Sets an ID for the notification, so it can be updated.
-
                 int notifyID = 1;
 
-// The id of the channel.
                 String CHANNEL_ID = "my_channel_01";
 
                 //build notification object and set parameters
@@ -141,6 +139,8 @@ public class Login extends AppCompatActivity  {
                                 .setChannelId(CHANNEL_ID)
                                 .build();
               mNotificationManager.notify(notifyID, notifyDetails);
+              /*End of Notification codes*/
+
                 finish();
             } else {
                 Toast.makeText(Login.this, "No account records", Toast.LENGTH_LONG).show();
@@ -205,7 +205,6 @@ public class Login extends AppCompatActivity  {
                     Log.e("JDBC", "close connection failed");
                 }
             };
-
         }
     };
 }
