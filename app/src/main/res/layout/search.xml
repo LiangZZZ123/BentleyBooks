@@ -30,15 +30,36 @@
         android:id="@+id/search_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go"
+        android:text="Search"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@id/search_edit"/>
+
+    <TextView
+        android:id="@+id/view_isbn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click CHICK to find/confirm the ISBN"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="40dip"
+        android:layout_below="@id/search_edit"
+
+        />
+
+    <Button
+        android:id="@+id/check_botton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@id/view_isbn"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/librarybookshelf"
-        android:layout_below="@id/search_button"
+        android:layout_below="@id/view_isbn"
         android:orientation="vertical">
 
     <ListView

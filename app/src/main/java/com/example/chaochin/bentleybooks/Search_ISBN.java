@@ -3,7 +3,6 @@ package com.example.chaochin.bentleybooks;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -16,9 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.view.ViewGroup;
 
@@ -32,11 +29,11 @@ import java.util.ArrayList;
 public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener{
     private static final String tag = "Search_ISBN";
 
-    private TextView viewEmail;
+    private TextView viewName;
     private EditText editisbn;
     private String isbn;
-    private TextView username;
-    private Button go;
+    private Button search;
+    private Button check;
     private ListView listbook;
     private ArrayAdapter aaList;
     private ArrayList<Book> booksShow = new ArrayList<>();
@@ -44,32 +41,16 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
     private Thread t1 = null;
 
 
-    //for test use, this should be replaced by database
-//    Book book1 = new Book("111", "good", "11");
-//    Book book2 = new Book("222", "bad", "12");
-//    Book book3 = new Book("333", "terrible", "13");
-//    Book book4 = new Book("111", "excellent", "11");
-//    public Book[] booksOnline = {book1, book2, book3, book4};
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search);
-        //LinearLayout layout = new LinearLayout(getApplication());
-        //layout.setBackgroundColor(Color.TRANSPARENT);
-          //setBackgroundColor(Color.TRANSPARENT);
-
-//        ???
-//        ActionBar actionBar = getActionBar();
-//        actionBar.setDisplayShowTitleEnabled(false);
-//        actionBar.setDisplayUseLogoEnabled(false);
 
         //give reference
-        viewEmail = findViewById(R.id.viewUsername);
-        username = (TextView) findViewById(R.id.viewUsername);
+        viewName = (TextView) findViewById(R.id.viewUsername);
         editisbn = (EditText) findViewById(R.id.search_edit);
-        go = (Button) findViewById(R.id.search_button);
+        search = (Button) findViewById(R.id.search_button);
+        check = (Button) findViewById(R.id.check_botton);
         listbook = (ListView) findViewById(R.id.list);
 
         //receive user's information, create user object and show username in interface
@@ -79,9 +60,10 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         String name = intent.getStringExtra("name");
         String password = intent.getStringExtra("password");
         user = new UserData(email, phone, name, password);
-        viewEmail.setText(user.getName());
+        viewName.setText("Hi " + user.getName() + ", welcome to BentleyBook.");
 
-        go.setOnClickListener(this);
+        search.setOnClickListener(this);
+        check.setOnClickListener(this);
 
         listbook.setOnItemClickListener(this);
         listbook.setOnItemLongClickListener(this);
@@ -107,9 +89,6 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         };
 
         listbook.setAdapter(aaList);
-
-
-
     }
 
     //create option menu and link it to menu(menu_mainpage) created in xml
@@ -132,19 +111,30 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         }
     }
 
-    //listener method for (Button)go
+    //listener method for (Button)search
     @Override
-    public void onClick(View view) {
-        isbn = editisbn.getText().toString();
-        t1 = new Thread((backgroundLoad));
-        t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void onClick(View view) throws SecurityException {
+        switch (view.getId()) {
+            case R.id.search_button:
+                isbn = editisbn.getText().toString();
+                t1 = new Thread((backgroundLoad));
+                t1.start();
+                try {
+                    t1.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                aaList.notifyDataSetChanged();
 
-        aaList.notifyDataSetChanged();
+                break;
+
+            case R.id.check_botton:
+                isbn = editisbn.getText().toString();
+                String url = "http://www.bookfinder4u.com/IsbnSearch.aspx?isbn=" + isbn;
+                startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)));
+
+                break;
+        }
     }
 
     @Override
@@ -185,18 +175,6 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
         return true;
     }
 
-    //method to search book based on ISBN
-//    public void selectISBN(String isbn) {
-//        booksShow.clear();
-////        isbn = editisbn.getText().toString();
-//        for (Book book : booksOnline) {
-//            if (isbn.equals(book.getISBN()))
-//                booksShow.add(book);
-//        }
-//    }
-
-
-
 
     //set up syntax for load books from database
     private Runnable backgroundLoad = new Runnable() {
@@ -219,6 +197,7 @@ public class Search_ISBN extends AppCompatActivity implements AdapterView.OnItem
                 text = con.createStatement();
 //                executeQuery() Vs executeUpdate() Vs execute() see difference
                 ResultSet result = text.executeQuery("select * from book where isbn = '"+isbn +"'");
+                booksShow.clear();
 
                 while ( (result.next())){
                     String bookid = result.getString("bookid2");

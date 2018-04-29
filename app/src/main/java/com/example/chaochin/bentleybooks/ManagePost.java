@@ -60,7 +60,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
         setContentView(R.layout.manageposts);
 
         viewName = findViewById(R.id.viewUsername);
-        viewName.setText(Search_ISBN.user.getName());
+        viewName.setText("Hi " + Search_ISBN.user.getName() + ", search a book here.") ;
 
         edit1 = findViewById(R.id.editISBN);
         edit2 = findViewById(R.id.editPrice);
@@ -106,7 +106,6 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
 
     }
 
-
     //create option menu and link it to menu(menu_manageposts) created in xml
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_manageposts, menu);
@@ -121,7 +120,6 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
             case R.id.add:
                 //For convenience, delete condition "(numberISBN.length() == 13 || numberISBN.length() == 10) && " in test
                 if (!price.equals("") && !condition.equals("Select book condition:")){
-                    //ArrayList book  = new ArrayList<>(); //store ISBN and BookCondition and Price for one book
                     url = "http://www.bookfinder4u.com/IsbnSearch.aspx?isbn=" + numberISBN;
 
                     Intent intent1 = new Intent(this, BookInformation.class);
@@ -132,8 +130,6 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
                 return true;
 
             case R.id.returnPage:
-//                Intent intentMainPage = new Intent(this, Search_ISBN.class);
-//                startActivity(intentMainPage);
                 finish();
                 return true;
 
@@ -207,7 +203,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
     }
 
 
-    //Receive inofmation from (activity)BookInformation
+    //Receive information from (activity)BookInformation
     @Override
     protected void onActivityResult(int requestCode,int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -216,7 +212,6 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
                 // add book to MYSQL if click "Result_OK" in BookInformation
                 bookid = new SimpleDateFormat("yyMMddhhmmssMs").format(new Date());
                 book = new Book(bookid, numberISBN, condition, price, Search_ISBN.user.getName(), Search_ISBN.user.getEmail());
-                Toast.makeText(ManagePost.this, "I'm" + Search_ISBN.user.getName(), Toast.LENGTH_LONG).show();
                 books.add(book);
                 t1 = new Thread(backgroundAdd);
                 t1.start();
@@ -226,7 +221,6 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
                     e.printStackTrace();
                 }
 
-                //when we've added a book into database, do we need to load the database to local again???    what if add to database not successful?
                 books.clear();
                 t1 = new Thread(backgroundLoad);
                 t1.start();
@@ -276,7 +270,7 @@ public class ManagePost extends AppCompatActivity implements AdapterView.OnItemS
                 con = DriverManager.getConnection(URL, username, password);
 
                 text = con.createStatement();
-                ResultSet result = text.executeQuery("select * from book");
+                ResultSet result = text.executeQuery("select * from book where email = '"+Search_ISBN.user.getEmail()+"'");
 
                 while ( (result.next())){
                     bookid = result.getString("bookid2");
