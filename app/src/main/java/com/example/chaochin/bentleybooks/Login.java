@@ -97,17 +97,13 @@ public class Login extends AppCompatActivity  {
                 // The id of the channel.
                 String id = "my_channel_01";
 
-// The user-visible name of the channel.
                 CharSequence names = "hi";
-// The user-visible description of the channel.
                 String description = "yoyo";
                 int importance = NotificationManager.IMPORTANCE_LOW;
                 NotificationChannel mChannel = new NotificationChannel(id, name,importance);
-// Configure the notification channel.
                 mChannel.setDescription(description);
                 mChannel.enableLights(true);
-// Sets the notification light color for notifications posted to this
-// channel, if the device supports this feature.
+
                 mChannel.enableVibration(true);
 
                 mNotificationManager.createNotificationChannel(mChannel);
@@ -120,8 +116,7 @@ public class Login extends AppCompatActivity  {
                 notifyIntent.putExtra("phone",phone);
                 notifyIntent.putExtra("name", name);
                 notifyIntent.putExtra("password", password);
-                //create pending intent to wrap intent so that it
-                //will fire when notification selected.
+
                 PendingIntent pendingIntent = PendingIntent.getActivity(
                         this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
                 );

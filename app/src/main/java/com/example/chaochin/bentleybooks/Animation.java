@@ -6,9 +6,6 @@ package com.example.chaochin.bentleybooks;
 import java.util.Timer;
 import java.util.TimerTask;
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -64,7 +61,6 @@ public class Animation extends Activity {
             intent1.putExtra("password", password);
             startActivity(intent1);
             finish();
-
         }
     }
 }
