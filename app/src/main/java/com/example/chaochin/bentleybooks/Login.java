@@ -61,7 +61,7 @@ public class Login extends AppCompatActivity  {
                 password= e_password.getText().toString();
 
                 if (!email.contains("@bentley.edu")) {
-                    Toast.makeText(Login.this, "Please use Bentley email", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Login.this, "Please use Bentley email", Toast.LENGTH_SHORT).show();
                 } else {
                     Thread t1 = new Thread(background);
                     t1.start();
@@ -143,7 +143,7 @@ public class Login extends AppCompatActivity  {
 
                 finish();
             } else {
-                Toast.makeText(Login.this, "No account records", Toast.LENGTH_LONG).show();
+                Toast.makeText(Login.this, "No account records", Toast.LENGTH_SHORT).show();
             }
     }
 

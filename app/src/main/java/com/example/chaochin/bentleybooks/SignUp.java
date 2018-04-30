@@ -41,6 +41,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     String pwConfirm;
     String name;
     boolean registerSuccess;
+    boolean sameEmail;
 
     private Button registerButton;
 
@@ -61,7 +62,6 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         phoneNo=(EditText) findViewById(R.id.phoneNo);
         registerButton=(Button) findViewById(R.id.registerButton);
         registerButton.setOnClickListener(this);
-
     }
     public void onClick(View v) {
 
@@ -87,6 +87,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 }
             }
         }
+        if(sameEmail){
+            Toast.makeText(this, "Same email existed!", Toast.LENGTH_SHORT).show();
+        }
+
         if(registerSuccess){
             Toast.makeText(this, "Registration success!", Toast.LENGTH_SHORT).show();
             Intent i1 = new Intent(this,Login.class);
@@ -124,16 +128,32 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                         URL,
                         username,
                         pw);
-                String query = "insert into user (email, pw, phone, name)"
-                        + "values(?, ?, ?, ?)";
-                PreparedStatement p = con.prepareStatement(query);
 
-                p.setString(1,email);
-                p.setString(2,passw);
-                p.setString(3,phone);
-                p.setString(4,name);
-                p.execute();
-                registerSuccess = true;
+                /*To check if same email existed in database*/
+                stmt = con.createStatement();
+                ResultSet result = stmt.executeQuery(
+                        "SELECT email FROM user;");
+                while (result.next()) {
+                    String emailFromDB = result.getString("email");
+                    if(emailFromDB.equals(email)){
+                        sameEmail = true;
+                        break;
+                    }
+                }
+
+                /*If the email is new, create account*/
+                if(!sameEmail) {
+                    String query = "insert into user (email, pw, phone, name)"
+                            + "values(?, ?, ?, ?)";
+                    PreparedStatement p = con.prepareStatement(query);
+
+                    p.setString(1, email);
+                    p.setString(2, passw);
+                    p.setString(3, phone);
+                    p.setString(4, name);
+                    p.execute();
+                    registerSuccess = true;
+                }
 
             } catch (SQLException e) {
                 Log.e("JDBC","problems with SQL sent to "+URL+
