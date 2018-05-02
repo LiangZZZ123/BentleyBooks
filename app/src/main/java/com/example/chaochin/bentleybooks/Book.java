@@ -4,6 +4,7 @@ package com.example.chaochin.bentleybooks;
  * Created by chaochin on 2018/4/11.
  */
 
+/*set the attributes for a book object*/
 public class Book {
     private String bookid;
     private String ISBN;

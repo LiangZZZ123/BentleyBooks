@@ -30,14 +30,14 @@ public class BookInformation extends AppCompatActivity  {
         confirmPost.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 setResult(Activity.RESULT_OK);
-                finish();
+                finish(); //if the post is confirmed, go back to previous page
             }
         });
 
         cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 setResult(Activity.RESULT_CANCELED);
-                finish();
+                finish(); // if the post is canceled, go back to previous page
             }
         });
 

@@ -3,6 +3,7 @@ package com.example.chaochin.bentleybooks;
 import android.app.Application;
 import java.util.ArrayList;
 
+/*An user object who login successfully and its attributes*/
 public class UserData extends Application{
     private String email;
     private String password;

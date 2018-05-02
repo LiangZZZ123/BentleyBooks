@@ -10,7 +10,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.content.Intent;
-import android.widget.TextView;
 
 public class Animation extends Activity {
 
@@ -26,6 +25,7 @@ public class Animation extends Activity {
         AnimationRoutine1 task1 = new AnimationRoutine1();
         AnimationRoutine2 task2 = new AnimationRoutine2();
 
+        /*get the data passed from login.class*/
         Intent intent = getIntent();
         email = intent.getStringExtra("email");
         phone = intent.getStringExtra("phone");
@@ -54,6 +54,8 @@ public class Animation extends Activity {
             ImageView img = (ImageView) findViewById(R.id.simple_anim);
             AnimationDrawable frameAnimation = (AnimationDrawable) img.getBackground();
             frameAnimation.stop();
+
+            /*pass the data to the main page using intent object*/
             Intent intent1 = new Intent(Animation.this,Search_ISBN.class);
             intent1.putExtra("email",email);
             intent1.putExtra("phone",phone);
