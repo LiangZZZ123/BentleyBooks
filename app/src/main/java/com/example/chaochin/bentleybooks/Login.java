@@ -18,7 +18,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import android.app.NotificationChannel;
-import android.app.NotificationManager;
 
 /**
  * A login screen that offers login via email/password.
@@ -35,6 +34,8 @@ public class Login extends AppCompatActivity  {
     private boolean loginInfo = false;
     private NotificationManager mNotificationManager;
     private Notification notifyDetails;
+
+    /*Info for Notification*/
     private String contentTitle = "Login Success!";
     private String contentText = "Get back to Application by clicking me";
     private String tickerText = "New Alert, Click Me !!!";
@@ -60,13 +61,14 @@ public class Login extends AppCompatActivity  {
                 email = e_email.getText().toString();
                 password= e_password.getText().toString();
 
+                /*Only Bentley email is allowed*/
                 if (!email.contains("@bentley.edu")) {
                     Toast.makeText(Login.this, "Please use Bentley email", Toast.LENGTH_SHORT).show();
                 } else {
                     Thread t1 = new Thread(background);
                     t1.start();
                     try {
-                        t1.join();
+                        t1.join(); //wait the connection overs
                     } catch (InterruptedException e) {
                         Log.e("JDBC", "Interrupted Exception");
                     }
@@ -75,16 +77,19 @@ public class Login extends AppCompatActivity  {
             }
         });
 
+        /*for new user to register*/
         signUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent i2 = new Intent(Login.this, SignUp.class);
-                startActivity(i2);
+                startActivity(i2); // go to signUp activity
             }
         });
     }
 
+    /*if user info is correct, login to the mainpage, and set the notification, otherwise
+     shows no matched record*/
     public void loginCheck() {
-            if (loginInfo) {
+            if (loginInfo) { //if the login information is correct
                 Intent intent1 = new Intent(Login.this, Animation.class);
                 intent1.putExtra("email",email);
                 intent1.putExtra("phone",phone);
@@ -97,13 +102,12 @@ public class Login extends AppCompatActivity  {
                 // The id of the channel.
                 String id = "my_channel_01";
 
-                CharSequence names = "hi";
-                String description = "yoyo";
+                CharSequence names = "hi"; //no meaning
+                String description = "yoyo";//no meaning
                 int importance = NotificationManager.IMPORTANCE_LOW;
                 NotificationChannel mChannel = new NotificationChannel(id, name,importance);
                 mChannel.setDescription(description);
                 mChannel.enableLights(true);
-
                 mChannel.enableVibration(true);
 
                 mNotificationManager.createNotificationChannel(mChannel);
@@ -147,6 +151,7 @@ public class Login extends AppCompatActivity  {
             }
     }
 
+    /*Thread for the connection*/
     private Runnable background = new Runnable() {
         public void run(){
             String URL = "jdbc:mysql://frodo.bentley.edu:3306/bentleybooks";
@@ -185,10 +190,11 @@ public class Login extends AppCompatActivity  {
                 while (result.next()) {
                     String emailFromDB = result.getString("email");
                     String pwFromDB = result.getString("pw");
+                    /*to find the matched email and password*/
                     if(emailFromDB.equals(email) && pwFromDB.equals(password)){
                         name =  result.getString("name");
                         phone = result.getString("phone");
-                        loginInfo = true;
+                        loginInfo = true; //login information is correct
                         break;
                     }
                 }

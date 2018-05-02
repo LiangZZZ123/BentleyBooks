@@ -71,9 +71,11 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         phone = phoneNo.getText().toString();
         name = userName.getText().toString();
 
+        /*To check if user uses bentley email*/
         if(!email.contains("@bentley.edu")){
             Toast.makeText(this, "Please use bentley email", Toast.LENGTH_SHORT).show();
         }else {
+            /*To check if user inputs same password*/
             if(!passw.equals(pwConfirm)){
                 Toast.makeText(this, "Please check your password", Toast.LENGTH_SHORT).show();
             }
@@ -94,7 +96,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         if(registerSuccess){
             Toast.makeText(this, "Registration success!", Toast.LENGTH_SHORT).show();
             Intent i1 = new Intent(this,Login.class);
-            startActivity(i1);
+            startActivity(i1); //go to login activity
             finish();
         }
     }
@@ -133,6 +135,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 stmt = con.createStatement();
                 ResultSet result = stmt.executeQuery(
                         "SELECT email FROM user;");
+
+                /*email is unique, can not have the same one*/
                 while (result.next()) {
                     String emailFromDB = result.getString("email");
                     if(emailFromDB.equals(email)){
