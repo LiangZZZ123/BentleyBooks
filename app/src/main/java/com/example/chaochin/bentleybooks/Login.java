@@ -24,14 +24,15 @@ import android.app.NotificationChannel;
  */
 public class Login extends AppCompatActivity  {
 
-
+    /*create reference for layout*/
     private EditText e_email;
     private EditText e_password;
     private Button signIn;
     private Button signUp;
-    public String email;
-    private String password;
+
+    /*to verify if the login info is correct*/
     private boolean loginInfo = false;
+
     private NotificationManager mNotificationManager;
     private Notification notifyDetails;
 
@@ -43,6 +44,8 @@ public class Login extends AppCompatActivity  {
     /*To create UserData object*/
     private String name;
     private String phone;
+    public String email;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +136,6 @@ public class Login extends AppCompatActivity  {
                 notifyDetails =
                         new Notification.Builder(this)
                                 .setContentIntent(pendingIntent)
-
                                 .setContentTitle(contentTitle)   //set Notification text and icon
                                 .setContentText(contentText)
                                 .setSmallIcon(R.drawable.droid)
@@ -190,6 +192,7 @@ public class Login extends AppCompatActivity  {
                 while (result.next()) {
                     String emailFromDB = result.getString("email");
                     String pwFromDB = result.getString("pw");
+
                     /*to find the matched email and password*/
                     if(emailFromDB.equals(email) && pwFromDB.equals(password)){
                         name =  result.getString("name");

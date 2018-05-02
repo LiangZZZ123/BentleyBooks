@@ -23,23 +23,26 @@ import java.sql.Statement;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
+    /*create reference for the layout*/
     private TextView bentleyEmailTxt;
     private TextView usernameTxt;
     private TextView passwordTxt;
     private TextView confirmPasTxt;
     private TextView phoneNoTxt;
-
     private EditText bentleyEmail;
     private EditText userName;
     private EditText password;
     private EditText confirmPas;
     private EditText phoneNo;
 
+    /*To save user's input*/
     String email;
     String phone;
     String passw;
     String pwConfirm;
     String name;
+
+    /*to verify the success of the registration*/
     boolean registerSuccess;
     boolean sameEmail;
 
@@ -89,10 +92,12 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 }
             }
         }
+        /*if same email existed in the database*/
         if(sameEmail){
             Toast.makeText(this, "Same email existed!", Toast.LENGTH_SHORT).show();
         }
 
+        /*if the user registered successfully*/
         if(registerSuccess){
             Toast.makeText(this, "Registration success!", Toast.LENGTH_SHORT).show();
             Intent i1 = new Intent(this,Login.class);
